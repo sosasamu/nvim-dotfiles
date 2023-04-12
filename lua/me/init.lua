@@ -1,8 +1,9 @@
-require("theprimeagen.set")
-require("theprimeagen.remap")
+require("me.set")
+require("me.remap")
+require("me.packer")
 
 local augroup = vim.api.nvim_create_augroup
-local ThePrimeagenGroup = augroup('ThePrimeagen', {})
+local ThePrimeagenGroup = augroup('me', {})
 
 local autocmd = vim.api.nvim_create_autocmd
 local yank_group = augroup('HighlightYank', {})
@@ -31,3 +32,11 @@ autocmd({"BufWritePre"}, {
 vim.g.netrw_browse_split = 0
 vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
+
+vim.g.go_fmt_command = "goimports"
+vim.g.go_list_type = "quickfix"
+vim.g.go_highlight_methods = 1
+vim.g.go_highlight_functions = 1
+vim.g.go_highlight_structs = 1
+vim.g.go_highlight_operators = 1
+vim.g.go_highlight_build_constraints = 1

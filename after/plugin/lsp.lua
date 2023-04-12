@@ -4,12 +4,12 @@ lsp.preset("recommended")
 
 lsp.ensure_installed({
   'tsserver',
-  'sumneko_lua',
+  'lua_ls',
   'rust_analyzer',
 })
 
 -- Fix Undefined global 'vim'
-lsp.configure('sumneko_lua', {
+lsp.configure('lua_ls', {
     settings = {
         Lua = {
             diagnostics = {
@@ -62,6 +62,66 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
   vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
+
+-- organize imports
+-- https://github.com/neovim/nvim-lspconfig/issues/115#issuecomment-902680058
+function OrganizeImports(timeoutms)
+  local params = vim.lsp.util.make_range_params()
+  params.context = { only = { "source.organizeImports" } }
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, timeoutms)
+  for _, res in pairs(result or {}) do
+    for _, r in pairs(res.result or {}) do
+      if r.edit then
+        vim.lsp.util.apply_workspace_edit(r.edit, "UTF-8")
+      else
+        vim.lsp.buf.execute_command(r.command)
+      end
+    end
+  end
+end
+
+local lspconfig = require('lspconfig')
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+lspconfig.gopls.setup {
+  cmd = { "gopls", "serve" },
+  capabilities = capabilities,
+  on_attach = on_attach,
+  filetypes = { "go", "gomod" },
+  root_dir = lspconfig.util.root_pattern("go.work", "go.mod", ".git"),
+  settings = {
+    gopls = {
+      analyses = {
+        unusedparams = true,
+      },
+      staticcheck = true,
+      gofumpt = true,
+    },
+  },
+}
+
+lspconfig.golangcilsp.setup {
+  cmd = {'golangci-lint-langserver'},
+  root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
+  init_options = {
+      command = { "golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json", "--issues-exit-code=1" };
+  }
+}
+
+lspconfig.golangci_lint_ls.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  filetypes = {'go','gomod'}
+}
+
+-- TypeScript
+lspconfig.tsserver.setup {
+  on_attach = lsp.on_attach,
+  filetypes = { "typescript", "typescriptreact", "typescript.tsx" },
+  cmd = { "typescript-language-server", "--stdio" }
+}
+
+lspconfig.tailwindcss.setup {}
 
 lsp.setup()
 
