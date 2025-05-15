@@ -3,7 +3,7 @@ require("me.remap")
 require("me.packer")
 
 local augroup = vim.api.nvim_create_augroup
-local ThePrimeagenGroup = augroup('me', {})
+local group = augroup('me', {})
 
 local autocmd = vim.api.nvim_create_autocmd
 local yank_group = augroup('HighlightYank', {})
@@ -24,9 +24,15 @@ autocmd('TextYankPost', {
 })
 
 autocmd({"BufWritePre"}, {
-    group = ThePrimeagenGroup,
+    group = group,
     pattern = "*",
     command = [[%s/\s\+$//e]],
+})
+
+autocmd({"BufNewFile", "BufRead"}, {
+    group = group,
+    pattern = "*.tsx,*.jsx",
+    command = [[set filetype=typescriptreact]],
 })
 
 vim.g.netrw_browse_split = 0

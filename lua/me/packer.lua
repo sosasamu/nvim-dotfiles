@@ -126,7 +126,8 @@ return require('packer').startup(function(use)
 
   --fullstack dev
   use 'pangloss/vim-javascript' --JS support
-  use 'leafgarland/typescript-vim' --TS support
+  --use 'leafgarland/typescript-vim' --TS support
+  use 'vim-jsx-typescript'
   use 'maxmellon/vim-jsx-pretty' --JS and JSX syntax
   use 'mattn/emmet-vim'
   use 'jose-elias-alvarez/null-ls.nvim'

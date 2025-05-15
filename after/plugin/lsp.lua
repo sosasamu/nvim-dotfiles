@@ -100,13 +100,13 @@ lspconfig.gopls.setup {
   },
 }
 
-lspconfig.golangcilsp.setup {
-  cmd = {'golangci-lint-langserver'},
-  root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
-  init_options = {
-      command = { "golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json", "--issues-exit-code=1" };
-  }
-}
+--lspconfig.golangcilsp.setup {
+--  cmd = {'golangci-lint-langserver'},
+--  root_dir = lspconfig.util.root_pattern('.git', 'go.mod'),
+--  init_options = {
+--      command = { "golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json", "--issues-exit-code=1" };
+--  }
+--}
 
 lspconfig.golangci_lint_ls.setup {
   capabilities = capabilities,
